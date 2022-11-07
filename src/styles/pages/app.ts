@@ -6,6 +6,30 @@ export const Container = styled('div', {
     alignItems: "flex-start",
     justifyContent: 'center',
     minHeight: '100vh',
+
+    div: {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+
+    button: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0.75rem',
+
+        position: 'relative',
+        right: -136,
+
+        backgroundColor: '$gray800',
+        color: '$gray400',
+        border: 'none',
+        borderRadius: 6,
+        cursor: 'pointer',
+
+        '&:hover': {
+            color: '$gray100',
+        }
+    }
 })
 
 export const Header = styled('header', {

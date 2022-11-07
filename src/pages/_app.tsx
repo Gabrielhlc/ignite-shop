@@ -5,6 +5,7 @@ import logoImg from '../assets/logo.svg'
 import { Container, Header } from '../styles/pages/app';
 
 import Image from 'next/image';
+import { Handbag } from 'phosphor-react';
 
 globalStyles();
 
@@ -13,9 +14,15 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <Container>
       <Header>
-        <a href="/">
-          <Image src={logoImg} alt="" />
-        </a>
+        <div>
+          <a href="/">
+            <Image src={logoImg} alt="" />
+          </a>
+
+          <button>
+            <Handbag size={24} weight='bold' />
+          </button>
+        </div>
       </Header>
 
       <Component {...pageProps} />

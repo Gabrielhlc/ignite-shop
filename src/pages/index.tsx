@@ -9,7 +9,10 @@ import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css';
 
 import Image from "next/image"
-import { HomeContainer, Product } from "../styles/pages/home"
+import { HomeContainer, ProductContainer } from "../styles/pages/home"
+import { Handbag } from "phosphor-react"
+import { CartContext, Product } from "../contexts/cartContext"
+import { useContext } from "react"
 
 
 interface HomeProps {
@@ -21,6 +24,8 @@ interface HomeProps {
   }[]
 }
 
+
+
 export default function Home({ products }: HomeProps) {
   const [sliderRef] = useKeenSlider({
     slides: {
@@ -28,6 +33,12 @@ export default function Home({ products }: HomeProps) {
       spacing: 48,
     }
   })
+
+  const { setCartProducts } = useContext(CartContext);
+
+  function handleAddProduct(product: Product) {
+    setCartProducts(product)
+  }
 
   return (
     <>
@@ -40,14 +51,20 @@ export default function Home({ products }: HomeProps) {
         {products.map(product => {
           return (
             <Link href={`/product/${product.id}`} key={product.id}>
-              <Product className="keen-slider__slide">
+              <ProductContainer className="keen-slider__slide">
                 <Image src={product.imageUrl} width={520} height={480} alt="" />
 
                 <footer>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
+                  <div>
+                    <strong>{product.name}</strong>
+                    <span>{product.price}</span>
+                  </div>
+
+                  <button onClick={() => handleAddProduct(product)}>
+                    <Handbag size={32} weight="bold" />
+                  </button>
                 </footer>
-              </Product>
+              </ProductContainer>
             </Link>
           )
         })}
