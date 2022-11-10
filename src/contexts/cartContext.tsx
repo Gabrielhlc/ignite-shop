@@ -1,14 +1,17 @@
 import { createContext, ReactNode, useState } from "react";
 
 export interface Product {
+    id: string;
     name: string;
     imageUrl: string;
     price: string;
+    priceFormatted: string;
 }
 
 interface CartContextType {
     products: Product[]
     setCartProducts: (product: Product) => void;
+    cartPrice: number;
 }
 
 export const CartContext = createContext({} as CartContextType)
@@ -20,17 +23,15 @@ interface CartContextProviderProps {
 export function CartContextProvider({ children }: CartContextProviderProps) {
 
     const [products, setProducts] = useState<Product[]>([]);
+    const [cartPrice, setCartPrice] = useState(0)
 
     function setCartProducts(product: Product) {
-        var contains = false
-        products.map(productOnCart => {
-            if (productOnCart.name === product.name) {
-                contains = true
-            }
-        })
-        if (!contains) {
+        if (!products.includes(product)) {
             setProducts((state) => {
                 return [...state, product]
+            })
+            setCartPrice((state) => {
+                return state + parseInt(product.price)
             })
         }
     }
@@ -39,6 +40,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         <CartContext.Provider
             value={{
                 products,
+                cartPrice,
                 setCartProducts
             }}
         >

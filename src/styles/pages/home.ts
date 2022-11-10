@@ -25,6 +25,7 @@ export const ProductContainer = styled('div', {
     },
 
     footer: {
+        cursor: 'default',
         position: 'absolute',
         bottom: '0.25rem',
         left: '0.25rem',
@@ -71,6 +72,8 @@ export const ProductContainer = styled('div', {
             borderRadius: 6,
             backgroundColor: '$green500',
             color: '$white',
+            border: 'none',
+            cursor: 'pointer',
 
             '&:hover': {
                 backgroundColor: '$green300',
