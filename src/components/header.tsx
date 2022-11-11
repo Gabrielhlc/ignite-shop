@@ -11,10 +11,11 @@ import { Handbag } from "phosphor-react";
 import { CartCounter, HeaderContainer } from "../styles/components/header";
 
 export default function Header() {
-
     const [modalOpen, setModalOpen] = useState(false);
-
     const { products } = useContext(CartContext)
+
+    const isButtonDisabled = products.length == 0
+
     return (
         <HeaderContainer>
             <div>
@@ -24,7 +25,7 @@ export default function Header() {
 
                 <Dialog.Root open={modalOpen} onOpenChange={setModalOpen}>
                     <Dialog.Trigger asChild>
-                        <button onClick={() => setModalOpen(true)}>
+                        <button disabled={isButtonDisabled} onClick={() => setModalOpen(true)}>
                             {products.length > 0 ? (
                                 <CartCounter>
                                     {products.length}

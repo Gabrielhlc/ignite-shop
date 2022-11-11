@@ -1,19 +1,42 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import Image from 'next/image'
 import { useContext } from 'react'
+import axios from 'axios';
 
-import { CartContext } from '../contexts/cartContext'
+import { CartContext, Product } from '../contexts/cartContext'
 
 import { X } from 'phosphor-react'
 import { CartDetails, CartItems, CartModalContainer, CartPage } from '../styles/components/cartModal'
 
 export default function CartModal() {
-    const { products, cartPrice } = useContext(CartContext)
+    const { products, cartPrice, removeCartProduct } = useContext(CartContext)
 
     const totalPrice = new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL',
     }).format(cartPrice / 100)
+
+    async function handleBuyCart() {
+        console.log(products[0])
+        try {
+            const response = await axios.post('/api/checkout', {
+                products,
+            })
+
+            const { checkoutUrl } = response.data;
+
+            window.location.href = checkoutUrl
+        } catch (err) {
+            //Conectar com uma ferramenta de observabilidade (Datadog / Sentry)
+
+            console.log(err)
+            alert('Falha ao redirecionar o checkout!')
+        }
+    }
+
+    function handleRemoveProduct(product: Product) {
+        removeCartProduct(product)
+    }
 
     return (
         <Dialog.Portal>
@@ -31,14 +54,14 @@ export default function CartModal() {
                             <h1>Sacola de compras</h1>
                             {products.map(product => {
                                 return (
-                                    <CartItems>
+                                    <CartItems key={product.id}>
                                         <div className="image">
                                             <Image src={product.imageUrl} width={102} height={93} alt="" />
                                         </div>
                                         <div>
                                             <span>{product.name}</span>
                                             <strong>{product.priceFormatted}</strong>
-                                            <button>Remover</button>
+                                            <button onClick={() => handleRemoveProduct(product)}>Remover</button>
                                         </div>
                                     </CartItems>
                                 )
@@ -54,7 +77,10 @@ export default function CartModal() {
                                 <strong>{totalPrice}</strong>
                             </div>
                         </CartDetails>
-                        <button className="buyButton">Finalizar Compra</button>
+                        <button
+                            onClick={handleBuyCart}
+                            className="buyButton"
+                        >Finalizar Compra</button>
                     </CartPage>
                 </CartModalContainer>
             </Dialog.Content>

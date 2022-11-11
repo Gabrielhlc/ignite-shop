@@ -24,7 +24,11 @@ export const HeaderContainer = styled('header', {
         borderRadius: 6,
         cursor: 'pointer',
 
-        '&:hover': {
+        '&:disabled': {
+            cursor: 'default',
+        },
+
+        '&:not(:disabled):hover': {
             color: '$gray100',
         }
     }

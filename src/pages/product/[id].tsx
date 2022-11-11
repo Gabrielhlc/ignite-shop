@@ -1,13 +1,13 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext } from "react";
 
-import axios from "axios";
 import Stripe from "stripe";
 import { stripe } from "../../lib/stripe"
 
 import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/pages/product";
+import { CartContext } from "../../contexts/cartContext";
 
 interface ProductProps {
     product: {
@@ -15,31 +15,36 @@ interface ProductProps {
         name: string;
         imageUrl: string;
         price: string;
+        priceFormatted: string;
         description: string;
         defaultPriceId: string;
     }
 }
 
 export default function Product({ product }: ProductProps) {
-    const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
+    // const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
 
-    async function handleBuyProduct() {
-        try {
-            setIsCreatingCheckoutSession(true);
-            const response = await axios.post('/api/checkout', {
-                priceId: product.defaultPriceId,
-            })
+    const { setCartProducts } = useContext(CartContext)
 
-            const { checkoutUrl } = response.data;
+    function handleBuyProduct() {
 
-            window.location.href = checkoutUrl
-        } catch (err) {
-            //Conectar com uma ferramenta de observabilidade (Datadog / Sentry)
+        setCartProducts(product)
+        // try {
+        //     setIsCreatingCheckoutSession(true);
+        //     const response = await axios.post('/api/checkout', {
+        //         priceId: product.defaultPriceId,
+        //     })
 
-            setIsCreatingCheckoutSession(false);
+        //     const { checkoutUrl } = response.data;
 
-            alert('Falha ao redirecionar o checkout!')
-        }
+        //     window.location.href = checkoutUrl
+        // } catch (err) {
+        //     //Conectar com uma ferramenta de observabilidade (Datadog / Sentry)
+
+        //     setIsCreatingCheckoutSession(false);
+
+        //     alert('Falha ao redirecionar o checkout!')
+        // }
     }
 
     return (
@@ -54,14 +59,11 @@ export default function Product({ product }: ProductProps) {
                 </ImageContainer>
                 <ProductDetails>
                     <h1>{product.name}</h1>
-                    <span>{product.price}</span>
+                    <span>{product.priceFormatted}</span>
 
                     <p>{product.description}</p>
 
-                    <button
-                        disabled={isCreatingCheckoutSession}
-                        onClick={handleBuyProduct}
-                    >
+                    <button onClick={handleBuyProduct}>
                         Colocar na sacola
                     </button>
                 </ProductDetails>
@@ -96,7 +98,8 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
                 id: product.id,
                 name: product.name,
                 imageUrl: product.images[0],
-                price: new Intl.NumberFormat('pt-BR', {
+                price: price.unit_amount,
+                priceFormatted: new Intl.NumberFormat('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
                 }).format(price.unit_amount! / 100),

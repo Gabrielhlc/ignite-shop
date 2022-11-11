@@ -6,12 +6,14 @@ export interface Product {
     imageUrl: string;
     price: string;
     priceFormatted: string;
+    defaultPriceId: string;
 }
 
 interface CartContextType {
     products: Product[]
     setCartProducts: (product: Product) => void;
     cartPrice: number;
+    removeCartProduct: (product: Product) => void;
 }
 
 export const CartContext = createContext({} as CartContextType)
@@ -36,12 +38,24 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         }
     }
 
+    function removeCartProduct(product: Product) {
+        setProducts(state => {
+            return [...state.filter(productOnCart => {
+                return productOnCart.id !== product.id
+            })]
+        })
+        setCartPrice(state => {
+            return state - parseInt(product.price)
+        })
+    }
+
     return (
         <CartContext.Provider
             value={{
                 products,
                 cartPrice,
-                setCartProducts
+                setCartProducts,
+                removeCartProduct
             }}
         >
             {children}
