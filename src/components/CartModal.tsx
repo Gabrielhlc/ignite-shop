@@ -17,7 +17,6 @@ export default function CartModal() {
     }).format(cartPrice / 100)
 
     async function handleBuyCart() {
-        console.log(products[0])
         try {
             const response = await axios.post('/api/checkout', {
                 products,
