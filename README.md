@@ -5,7 +5,7 @@
 
 <h2>Description 📜</h2>
 
-<p>Ignite Shop is an clothing ecommerce focused on client-side performance by featuring Next.js. The user adds the products displayed in the carousel into the cart. Integrating the Stripe API, once the user checkouts, he's redirected to the Stripe checkout, an one-time payment certified platform. </p>
+<p>Ignite Shop is a clothing e-commerce focused on client-side performance by featuring Next.js. The user adds the products displayed in the carousel into the cart. Integrating the Stripe API, once the user checkouts, he's redirected to the Stripe checkout, an one-time payment certified platform. </p>
 <br>
 
 <div align="center">
